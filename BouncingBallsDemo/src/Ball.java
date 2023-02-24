@@ -2,10 +2,17 @@ import java.awt.*;
 import java.awt.geom.Ellipse2D;
 import java.util.Random;
 
-public class Ball {
-    private final Component canvas;
+public class Ball implements DrawableEntity {
+
+    public static final Object lock = new Object();
     private static final int XSIZE = 20;
     private static final int YSIZE = 20;
+    public static final int RADIUS_SQUARED = XSIZE * XSIZE / 4;
+    private static int idCounter;
+
+    private final int id;
+    private final Component canvas;
+
     private int x;
     private int y;
     private int dx = 2;
@@ -13,6 +20,11 @@ public class Ball {
 
 
     public Ball(Component c){
+        synchronized (lock)
+        {
+            id = idCounter++;
+        }
+
         this.canvas = c;
 
         y = 0;
@@ -26,6 +38,15 @@ public class Ball {
         }
     }
 
+    public int getX(){
+        return x;
+    }
+
+    public int getY(){
+        return y;
+    }
+
+    @Override
     public void draw (Graphics2D g2){
         g2.setColor(Color.darkGray);
         g2.fill(new Ellipse2D.Double(x,y,XSIZE,YSIZE));
@@ -51,5 +72,10 @@ public class Ball {
             dy = -dy;
         }
         this.canvas.repaint();
+    }
+
+    @Override
+    public int hashCode() {
+        return id;
     }
 }
