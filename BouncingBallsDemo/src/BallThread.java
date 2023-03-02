@@ -3,20 +3,29 @@ public class BallThread extends Thread{
     private final BallHole hole;
     private final Runnable onComplete;
 
-    public BallThread(Ball ball, BallHole hole, Runnable onComplete){
-        b = ball;
+    private Thread otherThread;
+
+    public BallThread(Ball ball, BallHole hole, Runnable onComplete, int threadPriority){
+        this.b = ball;
         this.hole = hole;
         this.onComplete = onComplete;
+        this.setPriority(threadPriority);
     }
     @Override
     public void run(){
         try{
             for(int i=1; i<10000; i++){
+                if(otherThread != null)
+                {
+                    otherThread.join();
+                    otherThread = null;
+                }
+
                 b.move();
                 System.out.println("Thread name = "
                         + Thread.currentThread().getName());
                 Thread.sleep(5);
-                if(hole.checkCollision(b))
+                if(hole != null && hole.checkCollision(b))
                     break;
             }
         } catch(InterruptedException ignored){ }
@@ -25,5 +34,9 @@ public class BallThread extends Thread{
         }
     }
 
+    public void WaitForOtherThread(Thread thread)
+    {
+        otherThread = thread;
+    }
 
 }

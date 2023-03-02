@@ -1,6 +1,5 @@
 import java.awt.*;
 import java.awt.geom.Ellipse2D;
-import java.util.Random;
 
 public class Ball implements DrawableEntity {
 
@@ -13,29 +12,23 @@ public class Ball implements DrawableEntity {
     private final int id;
     private final Component canvas;
 
+    private final Color color;
+
     private int x;
     private int y;
     private int dx = 2;
     private int dy = 2;
 
-
-    public Ball(Component c){
+    public Ball(int x, int y, Component c, Color color){
         synchronized (lock)
         {
             id = idCounter++;
         }
 
+        this.color = color;
         this.canvas = c;
-
-        y = 0;
-        x = 0;
-        if(Math.random()<0.5){
-            x = new Random().nextInt(this.canvas.getWidth());
-            y = 0;
-        }else{
-            x = 0;
-            y = new Random().nextInt(this.canvas.getHeight());
-        }
+        this.x = x;
+        this.y = y;
     }
 
     public int getX(){
@@ -48,7 +41,7 @@ public class Ball implements DrawableEntity {
 
     @Override
     public void draw (Graphics2D g2){
-        g2.setColor(Color.darkGray);
+        g2.setColor(color);
         g2.fill(new Ellipse2D.Double(x,y,XSIZE,YSIZE));
     }
 
