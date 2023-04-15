@@ -5,7 +5,7 @@ import StringPrinterTest.StringPrinterThread;
 public class CounterTestRunner {
     public long Run(){
         int times = 100000;
-        Counter counter = new NoSyncCounter();
+        Counter counter = new AtomicCounter();
 
         Thread incrementThread = new Thread( () -> {
            for (int i = 0; i < times; i++){
